@@ -1,15 +1,29 @@
+# 依赖目录
 /node_modules/
 /vendor/
+
+# ThinkPHP 运行时缓存与日志
 /runtime/
-/.env
+
+# 环境配置与数据库
 /.env
 /.env.*
 /*.env
+/application/database.php
+
+# IDE
 /.idea/
+/.vscode/
+
+# 日志与数据库
 /*.log
-/.git/
-/.DS_Store
 /*.sqlite
+
+# 上传文件
 /public/uploads/
 /uploads/
-/lza/
+
+# 系统文件
+/.git/
+/.DS_Store
+
