@@ -1,0 +1,11 @@
+2026/04/08 09:15:17 [notice] 25180#19540: signal process started
+2026/04/08 09:15:17 [error] 25180#19540: CreateFile() "E:\claude\demo\newsite\application/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2026/04/08 09:47:03 [emerg] 31440#33736: CreateDirectory() "E:\claude\demo\newsite\application/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/04/08 09:54:08 [alert] 31512#29096: OpenEvent("ngx_master_32516") failed (2: The system cannot find the file specified)
+2026/04/08 10:03:59 [emerg] 21568#29200: CreateDirectory() "E:\claude\demo\newsite\application/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/04/08 10:42:11 [notice] 736#4984: signal process started
+2026/04/08 10:43:45 [notice] 15852#27412: signal process started
+2026/04/08 10:46:04 [notice] 32068#32112: signal process started
+2026/04/08 10:47:06 [notice] 24188#32648: signal process started
+2026/04/08 10:49:39 [notice] 18560#25268: signal process started
+2026/04/08 10:56:30 [notice] 3368#5216: signal process started

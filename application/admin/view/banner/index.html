@@ -1,0 +1,65 @@
+{assign name="currentMenu" value="banner" /}
+{extend name="public/base" /}
+
+{block name="content"}
+<div class="admin-panel">
+    <div class="panel-header">
+        <h3><i class="fas fa-images"></i> 轮播管理</h3>
+        <a href="/admin/banner/add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 添加轮播</a>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="50">ID</th>
+                    <th width="220">封面</th>
+                    <th>标题</th>
+                    <th>链接</th>
+                    <th width="80">状态</th>
+                    <th width="80">排序</th>
+                    <th width="150">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="list" id="banner"}
+                <tr>
+                    <td>{$banner.id}</td>
+                    <td><img src="{$banner.image}" style="width:180px;height:80px;object-fit:cover;border-radius:4px;"></td>
+                    <td>{$banner.title|default='-'}</td>
+                    <td>{$banner.url|default='-'}</td>
+                    <td>
+                        {if intval($banner.status) == 1}
+                        <span class="badge badge-success">启用</span>
+                        {else/}
+                        <span class="badge badge-danger">禁用</span>
+                        {/if}
+                    </td>
+                    <td>{$banner.sort}</td>
+                    <td>
+                        <a href="/admin/banner/edit?id={$banner.id}" class="btn btn-primary btn-sm">编辑</a>
+                        <a href="javascript:;" onclick="deleteBanner({$banner.id})" class="btn btn-danger btn-sm">删除</a>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+function deleteBanner(id) {
+    if (confirm('确定要删除这个轮播吗？')) {
+        $.post('/admin/banner/delete', {id: id}, function(res) {
+            if (res.code === 1) {
+                alert('删除成功');
+                location.reload();
+            } else {
+                alert(res.msg || '删除失败');
+            }
+        });
+    }
+}
+</script>
+{/block}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理 - {$siteName|default='综合新闻网站'}</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/i18n/langs/zh_CN.js"></script>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- 侧边栏 -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <a href="/admin">{$siteName|default='新闻网站'}</a>
+            </div>
+            <ul class="sidebar-menu">
+                <li {if isset($currentMenu) && $currentMenu == 'index'}class="active"{/if}>
+                    <a href="/admin"><i class="fas fa-home"></i> <span>管理首页</span></a>
+                </li>
+                <li {if isset($currentMenu) && $currentMenu == 'article'}class="active"{/if}>
+                    <a href="/admin/article/index"><i class="fas fa-newspaper"></i> <span>文章管理</span></a>
+                </li>
+                <li {if isset($currentMenu) && $currentMenu == 'category'}class="active"{/if}>
+                    <a href="/admin/category/index"><i class="fas fa-folder"></i> <span>分类管理</span></a>
+                </li>
+                <li {if isset($currentMenu) && $currentMenu == 'comment'}class="active"{/if}>
+                    <a href="/admin/comment/index"><i class="fas fa-comments"></i> <span>评论管理</span></a>
+                </li>
+                <li {if isset($currentMenu) && $currentMenu == 'user'}class="active"{/if}>
+                    <a href="/admin/user/index"><i class="fas fa-users"></i> <span>用户管理</span></a>
+                </li>
+                <li {if isset($currentMenu) && $currentMenu == 'banner'}class="active"{/if}>
+                    <a href="/admin/banner/index"><i class="fas fa-images"></i> <span>轮播管理</span></a>
+                </li>
+                <li {if isset($currentMenu) && $currentMenu == 'system'}class="active"{/if}>
+                    <a href="/admin/system/index"><i class="fas fa-cog"></i> <span>系统设置</span></a>
+                </li>
+                <li>
+                    <a href="/"><i class="fas fa-globe"></i> <span>查看前台</span></a>
+                </li>
+                <li>
+                    <a href="/admin/logout"><i class="fas fa-sign-out-alt"></i> <span>退出登录</span></a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- 主内容 -->
+        <main class="admin-main">
+            <!-- 顶部导航 -->
+            <header class="admin-header">
+                <div class="admin-header-left">
+                    <h1>{$title|default='管理后台'}</h1>
+                </div>
+                <div class="admin-header-right">
+                    <span>欢迎，{$adminNickname|default='管理员'}</span>
+                    <a href="/admin/logout"><i class="fas fa-sign-out-alt"></i> 退出</a>
+                </div>
+            </header>
+
+            <!-- 内容区 -->
+            <div class="admin-content">
+                {block name="content"}这里会被子模板覆盖{/block}
+            </div>
+        </main>
+    </div>
+</body>
+{block name="script"}{/block}
+</html>

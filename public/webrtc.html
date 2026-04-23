@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>8路WebRTC监控播放器</title>
+    <style>
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            background: #222;
+            padding: 10px;
+        }
+        .video-item {
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        body {
+            background: #111;
+            color: #eee;
+            font-family: sans-serif;
+        }
+        h1 { text-align: center; margin: 20px 0; }
+        .status {
+            text-align: center;
+            color: #0f0;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>8路实时监控 (WebRTC)</h1>
+    <div class="status" id="status">正在连接...</div>
+    <div class="video-grid" id="videoGrid"></div>
+
+    <!-- 引入 webrtc-streamer 客户端库 -->
+    <script src="https://webrtc-streamer.com/latest/webrtcstreamer.js"></script>
+    <script src="https://webrtc-streamer.com/latest/adapter.min.js"></script>
+
+    <script>
+        // ==================== 配置区域 ====================
+        // 1. 你的 webrtc-streamer 服务器地址（必须运行中）
+        const WEBRTC_STREAMER_SERVER = 'http://192.168.80.34:8000';  // 改成实际地址
+
+        // 2. 8路摄像头的原始RTSP地址（子码流地址，建议使用子码流以提升性能）
+        const rtspAddresses = [
+            'rtsp://192.168.80.34:554/rtp/34020000001110000005_34020000001320000001?originTypeStr=rtp_push',   // 第1路
+            'rtsp://192.168.80.34:554/rtp/34020000001110000005_34020000001320000001?originTypeStr=rtp_push',   // 第1路
+            'rtsp://192.168.80.34:554/rtp/34020000001110000005_34020000001320000001?originTypeStr=rtp_push',   // 第1路
+            'rtsp://192.168.80.34:554/rtp/34020000001110000005_34020000001320000001?originTypeStr=rtp_push',   // 第1路
+            'rtsp://192.168.80.34:554/rtp/34020000001110000005_34020000001320000001?originTypeStr=rtp_push',   // 第1路
+            'rtsp://192.168.80.34:554/rtp/34020000001110000005_34020000001320000001?originTypeStr=rtp_push',   // 第1路
+            'rtsp://192.168.80.34:554/rtp/34020000001110000005_34020000001320000001?originTypeStr=rtp_push',   // 第1路
+            'rtsp://192.168.80.34:554/rtp/34020000001110000005_34020000001320000001?originTypeStr=rtp_push',   // 第1路
+        ];
+        // =================================================
+
+        const videoGrid = document.getElementById('videoGrid');
+        const statusDiv = document.getElementById('status');
+        let webRtcStreamers = [];  // 存储每个实例
+
+        // 创建8个video元素并添加到网格中
+        for (let i = 0; i < rtspAddresses.length; i++) {
+            const videoItem = document.createElement('div');
+            videoItem.className = 'video-item';
+            const video = document.createElement('video');
+            video.id = `video-${i}`;
+            video.autoplay = true;
+            video.muted = true;      // 必须，否则可能无法自动播放
+            video.playsInline = true;
+            videoItem.appendChild(video);
+            videoGrid.appendChild(videoItem);
+        }
+
+        // 获取所有video元素
+        const videoElements = Array.from(document.querySelectorAll('video'));
+
+        // 连接所有流
+        let connectedCount = 0;
+        videoElements.forEach((video, index) => {
+            const rtspUrl = rtspAddresses[index];
+            if (!rtspUrl) {
+                console.warn(`第${index+1}路地址为空`);
+                return;
+            }
+            // 创建 WebRtcStreamer 实例
+            const streamer = new WebRtcStreamer(video, WEBRTC_STREAMER_SERVER);
+            // 连接RTSP地址（webrtc-streamer内部会转换为WebRTC）
+            streamer.connect(rtspUrl);
+            webRtcStreamers.push(streamer);
+
+            // 监听连接状态（可选，用于显示状态）
+            video.addEventListener('playing', () => {
+                connectedCount++;
+                statusDiv.innerText = `已连接 ${connectedCount} / ${rtspAddresses.length} 路`;
+            });
+            video.addEventListener('error', (e) => {
+                console.error(`第${index+1}路播放出错`, e);
+                statusDiv.innerText = `第${index+1}路连接失败`;
+            });
+        });
+
+        // 页面关闭时释放资源（可选）
+        window.addEventListener('beforeunload', () => {
+            webRtcStreamers.forEach(streamer => {
+                if (streamer.disconnect) streamer.disconnect();
+            });
+        });
+    </script>
+</body>
+</html>

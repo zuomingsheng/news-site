@@ -1,0 +1,63 @@
+{assign name="currentMenu" value="category" /}
+{extend name="public/base" /}
+
+{block name="content"}
+<div class="admin-panel">
+    <div class="panel-header">
+        <h3><i class="fas fa-folder"></i> 分类管理</h3>
+        <a href="/admin/category/add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 添加分类</a>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="60">ID</th>
+                    <th>分类名称</th>
+                    <th width="80">排序</th>
+                    <th width="80">状态</th>
+                    <th width="80">文章数</th>
+                    <th width="150">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="tree" id="cat"}
+                <tr>
+                    <td>{$cat.id}</td>
+                    <td>{$cat.name}</td>
+                    <td>{$cat.sort}</td>
+                    <td>
+                        {if intval($cat.status) == 1}
+                        <span class="badge badge-success">启用</span>
+                        {else/}
+                        <span class="badge badge-danger">禁用</span>
+                        {/if}
+                    </td>
+                    <td>{$cat.article_count|default=0}</td>
+                    <td>
+                        <a href="/admin/category/edit?id={$cat.id}" class="btn btn-primary btn-sm">编辑</a>
+                        <a href="javascript:;" onclick="deleteCategory({$cat.id})" class="btn btn-danger btn-sm">删除</a>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+function deleteCategory(id) {
+    if (confirm('确定要删除这个分类吗？')) {
+        $.post('/admin/category/delete', {id: id}, function(res) {
+            if (res.code === 1) {
+                alert('删除成功');
+                location.reload();
+            } else {
+                alert(res.msg || '删除失败');
+            }
+        });
+    }
+}
+</script>
+{/block}

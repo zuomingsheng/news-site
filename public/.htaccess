@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+  Options +FollowSymlinks -Multiviews
+  RewriteEngine On
+
+  # 如果是静态文件或上传文件，直接访问
+  RewriteRule ^static/ - [L]
+  RewriteRule ^uploads/ - [L]
+
+  # 其他请求重写到 index.php
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.*)$ index.php?/$1 [QSA,L]
+</IfModule>

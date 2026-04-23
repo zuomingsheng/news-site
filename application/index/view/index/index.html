@@ -1,0 +1,176 @@
+{extend name="public/base" /}
+
+{block name="content"}
+<!-- 轮播区域 -->
+<section class="home-banner">
+    <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            {volist name="banners" id="banner" key="k"}
+            <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="{$k-1}" {if condition="$k==1"}class="active"{/if}></button>
+            {/volist}
+        </div>
+        <div class="carousel-inner">
+            {volist name="banners" id="banner" key="k"}
+            <div class="carousel-item {if condition="$k==1"}active{/if}">
+                <a href="{$banner.url|default='/'}">
+                    <img src="{$banner.image}" alt="{$banner.title}" onerror="this.src='/static/images/default-banner.jpg'">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{$banner.title}</h5>
+                </div>
+            </div>
+            {/volist}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</section>
+
+<!-- 分类导航 -->
+<nav class="category-nav">
+    <ul>
+        <li class="active"><a href="/">全部</a></li>
+        {volist name="categories" id="cat"}
+        <li><a href="/category/{$cat.id}">{$cat.name}</a></li>
+        {/volist}
+    </ul>
+</nav>
+
+<!-- 首页内容 -->
+<div class="index-wrapper">
+    <!-- 左侧主内容 -->
+    <div class="main-content-area">
+        <!-- 置顶文章 -->
+        {notempty name="topArticles"}
+        <section class="channel-section">
+            <div class="channel-header">
+                <h2 class="channel-title">置顶推荐</h2>
+            </div>
+            <div class="top-articles">
+                {volist name="topArticles" id="article" key="k"}
+                <div class="top-article-card">
+                    <img class="article-img" src="{$article.cover}" alt="{$article.title}" onerror="this.src='/static/images/default-cover.jpg'">
+                    <div class="article-overlay">
+                        <h3 class="article-title"><a href="/article/{$article.id}">{$article.title}</a></h3>
+                        <div class="article-meta">
+                            <span><i class="far fa-clock"></i> {$article.publish_time}</span>
+                            <span><i class="far fa-eye"></i> {$article.views}</span>
+                        </div>
+                    </div>
+                    {if intval($article.is_top) == 1}<span class="badge badge-top" style="position:absolute;top:10px;left:10px;">置顶</span>{/if}
+                </div>
+                {/volist}
+            </div>
+        </section>
+        {/notempty}
+
+        <!-- 推荐文章 -->
+        {notempty name="recommendArticles"}
+        <section class="channel-section">
+            <div class="channel-header">
+                <h2 class="channel-title">热门推荐</h2>
+                <a href="/" class="channel-more">更多 <i class="fas fa-angle-right"></i></a>
+            </div>
+            <div class="article-grid">
+                {volist name="recommendArticles" id="article"}
+                <div class="article-card">
+                    <img class="article-card-img" src="{$article.cover}" alt="{$article.title}" onerror="this.src='/static/images/default-cover.jpg'">
+                    <div class="article-card-body">
+                        <h3 class="article-card-title">
+                            <a href="/article/{$article.id}">{$article.title}</a>
+                        </h3>
+                        <div class="article-card-meta">
+                            <span class="badge badge-category">{$article.category.name|default='默认分类'}</span>
+                            <span><i class="far fa-clock"></i> {$article.publish_time}</span>
+                        </div>
+                    </div>
+                    {if intval($article.is_recommend) == 1}<span class="badge badge-recommend" style="position:absolute;top:10px;right:10px;">推荐</span>{/if}
+                </div>
+                {/volist}
+            </div>
+        </section>
+        {/notempty}
+
+        <!-- 最新文章 -->
+        <section class="channel-section">
+            <div class="channel-header">
+                <h2 class="channel-title">最新资讯</h2>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <ul class="article-list">
+                        {volist name="latestArticles" id="article"}
+                        <li>
+                            <div class="article-item">
+                                <a href="/article/{$article.id}">
+                                    <img class="article-thumb" src="{$article.cover}" alt="{$article.title}" onerror="this.src='/static/images/default-cover.jpg'">
+                                </a>
+                                <div class="article-info">
+                                    <h3 class="article-title">
+                                        <a href="/article/{$article.id}">{$article.title}</a>
+                                        {if intval($article.is_top) == 1}<span class="badge badge-top">置顶</span>{/if}
+                                        {if intval($article.is_recommend) == 1}<span class="badge badge-recommend">推荐</span>{/if}
+                                    </h3>
+                                    <div class="article-meta">
+                                        <span class="badge badge-category">{$article.category.name|default='默认分类'}</span>
+                                        <span><i class="far fa-user"></i> {$article.author.nickname|default='管理员'}</span>
+                                        <span><i class="far fa-clock"></i> {$article.publish_time}</span>
+                                        <span><i class="far fa-eye"></i> {$article.views} 阅读</span>
+                                    </div>
+                                    <p class="article-summary">{$article.summary|default=''}</p>
+                                </div>
+                            </div>
+                        </li>
+                        {/volist}
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+        <!-- 热门文章 -->
+        <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title"><i class="fas fa-fire"></i> 热门文章</h3>
+            <div class="sidebar-widget-body">
+                <ul class="hot-article-list">
+                    {volist name="hotArticles" id="article" key="k"}
+                    <li>
+                        <span class="rank {if condition='$k<=3'}top{/if}">{$k}</span>
+                        <h4 class="article-title">
+                            <a href="/article/{$article.id}">{$article.title|mb_substr=0,20}</a>
+                        </h4>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+
+        <!-- 分类 -->
+        <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title"><i class="fas fa-folder"></i> 文章分类</h3>
+            <div class="sidebar-widget-body">
+                <ul class="category-list">
+                    {volist name="categories" id="cat"}
+                    <li><a href="/category/{$cat.id}">{$cat.name}</a></li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+
+        <!-- 关注我们 -->
+        <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title"><i class="fas fa-link"></i> 关注我们</h3>
+            <div class="sidebar-widget-body text-center">
+                <p class="text-muted mb-md">扫码关注微信公众号</p>
+                <img src="/static/images/qrcode.jpg" alt="关注我们" style="width:150px;border-radius:8px;" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </aside>
+</div>
+{/block}

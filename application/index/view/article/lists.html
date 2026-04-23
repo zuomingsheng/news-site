@@ -1,0 +1,96 @@
+{extend name="public/base" /}
+
+{block name="content"}
+<!-- 面包屑导航 -->
+<nav class="breadcrumb">
+    <div class="container">
+        <a href="/">首页</a>
+        <span>/</span>
+        <span>{$category.name|default='文章列表'}</span>
+    </div>
+</nav>
+
+<div class="index-wrapper">
+    <!-- 文章列表 -->
+    <div class="main-content-area">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i> {$category.name|default='全部文章'}
+                <span class="text-muted" style="font-weight:normal;font-size:13px;">（共 {$list->total()} 篇）</span>
+            </div>
+            <div class="card-body">
+                {empty name="list"}
+                <div class="empty-state">
+                    <img src="/static/images/empty.png" alt="暂无文章" onerror="this.style.display='none'">
+                    <p>暂无文章</p>
+                </div>
+                {else /}
+                <ul class="article-list">
+                    {volist name="list" id="article"}
+                    <li>
+                        <div class="article-item">
+                            <a href="/article/{$article.id}">
+                                <img class="article-thumb" src="{$article.cover}" alt="{$article.title}" onerror="this.src='/static/images/default-cover.jpg'">
+                            </a>
+                            <div class="article-info">
+                                <h3 class="article-title">
+                                    <a href="/article/{$article.id}">{$article.title}</a>
+                                    {if intval($article.is_top) == 1}<span class="badge badge-top">置顶</span>{/if}
+                                    {if intval($article.is_recommend) == 1}<span class="badge badge-recommend">推荐</span>{/if}
+                                </h3>
+                                <div class="article-meta">
+                                    <span><i class="far fa-user"></i> {$article.author.nickname|default='管理员'}</span>
+                                    <span><i class="far fa-clock"></i> {$article.publish_time|default=''}</span>
+                                    <span><i class="far fa-eye"></i> {$article.views} 阅读</span>
+                                    <span><i class="far fa-comment"></i> {$article.comments} 评论</span>
+                                </div>
+                                <p class="article-summary">{$article.summary|default=''}</p>
+                            </div>
+                        </div>
+                    </li>
+                    {/volist}
+                </ul>
+
+                <!-- 分页 -->
+                {$list->render()}
+                {/empty}
+            </div>
+        </div>
+    </div>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+        <!-- 热门文章 -->
+        <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title"><i class="fas fa-fire"></i> 热门文章</h3>
+            <div class="sidebar-widget-body">
+                <ul class="hot-article-list">
+                    {volist name="hotArticles" id="item" key="k"}
+                    <li>
+                        <span class="rank {if condition='$k<=3'}top{/if}">{$k}</span>
+                        <h4 class="article-title">
+                            <a href="/article/{$item.id}">{$item.title}</a>
+                        </h4>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+
+        <!-- 分类 -->
+        <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title"><i class="fas fa-folder"></i> 文章分类</h3>
+            <div class="sidebar-widget-body">
+                <ul class="category-list">
+                    <li {empty name="cid"}class="active"{/empty}><a href="/">全部</a></li>
+                    {volist name="categories" id="cat"}
+                    <li {if isset($cid) && intval($cid) == intval($cat.id)}class="active"{/if}>
+                        <a href="/category/{$cat.id}">{$cat.name}</a>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+    </aside>
+</div>
+{/block}

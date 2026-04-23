@@ -1,0 +1,15 @@
+{
+  "blocked_extensions": [
+    ".pem",
+    ".key",
+    ".p12"
+  ],
+  "blocked_files": [
+    ".env",
+    ".env.local",
+    "application/database.php"
+  ],
+  "blocked_patterns": [
+    "*.env"
+  ]
+}

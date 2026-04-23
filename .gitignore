@@ -1,0 +1,15 @@
+/node_modules/
+/vendor/
+/runtime/
+/.env
+/.env
+/.env.*
+/*.env
+/.idea/
+/*.log
+/.git/
+/.DS_Store
+/*.sqlite
+/public/uploads/
+/uploads/
+/lza/

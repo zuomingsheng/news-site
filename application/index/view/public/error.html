@@ -1,0 +1,153 @@
+{extend name="public/base" /}
+
+{block name="content"}
+<style>
+.error-page-wrap {
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+}
+.error-page {
+    text-align: center;
+    max-width: 600px;
+}
+.error-graphic {
+    position: relative;
+    margin-bottom: 30px;
+}
+.error-graphic .bg-num {
+    font-size: 200px;
+    font-weight: 900;
+    font-style: italic;
+    color: #f0f2f5;
+    line-height: 1;
+    letter-spacing: -10px;
+    user-select: none;
+}
+.error-graphic .code-num {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 72px;
+    font-weight: 800;
+    color: #1a3a5c;
+    line-height: 1;
+    text-shadow: 0 4px 12px rgba(26, 58, 92, 0.15);
+}
+.error-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a3a5c;
+    margin-bottom: 12px;
+}
+.error-desc {
+    font-size: 15px;
+    color: #6c757d;
+    line-height: 1.8;
+    margin-bottom: 35px;
+    padding: 0 20px;
+}
+.error-detail {
+    background: #f8f9fa;
+    border: 1px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 35px;
+    display: inline-block;
+}
+.error-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.btn-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 32px;
+    background: #1a3a5c;
+    color: #fff;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(26, 58, 92, 0.3);
+}
+.btn-home:hover {
+    background: #2c5282;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 58, 92, 0.35);
+}
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 32px;
+    background: #fff;
+    color: #1a3a5c;
+    border: 2px solid #1a3a5c;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.btn-back:hover {
+    background: #f0f4f8;
+    color: #1a3a5c;
+    transform: translateY(-2px);
+}
+</style>
+
+<div class="error-page-wrap">
+    <div class="error-page">
+        <div class="error-graphic">
+            <div class="bg-num"><?php echo $code == 404 ? '404' : ($code == 500 ? '500' : 'Ooops'); ?></div>
+            <div class="code-num">{$code|default=404}</div>
+        </div>
+        <h1 class="error-title"><?php
+            $titles = [
+                400 => '请求错误',
+                401 => '未授权',
+                403 => '禁止访问',
+                404 => '页面不存在',
+                405 => '请求方法不允许',
+                500 => '服务器错误',
+            ];
+            echo isset($titles[$code]) ? $titles[$code] : '出错了';
+        ?></h1>
+        <p class="error-desc">
+            <?php if ($code == 404): ?>
+            抱歉，您访问的页面已下线或地址有误<br>
+            请检查网址是否正确，或返回首页浏览其他内容
+            <?php elseif ($code == 401): ?>
+            该页面需要登录后才能访问<br>
+            请先登录后重试
+            <?php elseif ($code == 403): ?>
+            您没有权限访问该页面<br>
+            如有疑问请联系管理员
+            <?php else: ?>
+            服务器遇到了问题，请稍后再试<br>
+            问题已自动记录，我们会尽快处理
+            <?php endif; ?>
+        </p>
+        <?php if (isset($data['file'])): ?>
+        <div class="error-detail">
+            <i class="fas fa-file-code"></i> {$data.file|default=''} (第 {$data.line|default=0} 行)
+        </div>
+        <?php endif; ?>
+        <div class="error-actions">
+            <a href="/" class="btn-home"><i class="fas fa-home"></i> 返回首页</a>
+            <a href="javascript:history.back(-1)" class="btn-back"><i class="fas fa-arrow-left"></i> 返回上页</a>
+        </div>
+    </div>
+</div>
+{/block}

@@ -1,0 +1,106 @@
+{assign name="currentMenu" value="index" /}
+{extend name="public/base" /}
+
+{block name="content"}
+<!-- 统计卡片 -->
+<div class="stat-cards">
+    <div class="stat-card">
+        <div class="stat-icon blue">
+            <i class="fas fa-newspaper"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{$articleCount}</h3>
+            <p>文章总数</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{$userCount}</h3>
+            <p>用户总数</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orange">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{$commentCount}</h3>
+            <p>评论总数</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon red">
+            <i class="fas fa-folder"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{$categoryCount}</h3>
+            <p>分类总数</p>
+        </div>
+    </div>
+</div>
+
+<!-- 最新文章 -->
+<div class="admin-panel">
+    <div class="panel-header">
+        <h3><i class="fas fa-newspaper"></i> 最新文章</h3>
+        <a href="/admin/article/add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 添加文章</a>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width:50px;">ID</th>
+                    <th>标题</th>
+                    <th style="width:90px;">分类</th>
+                    <th style="width:70px;">作者</th>
+                    <th style="width:100px;">状态</th>
+                    <th style="width:160px;">发布时间</th>
+                    <th style="width:140px;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="latestArticles" id="article"}
+                <tr>
+                    <td>{$article.id}</td>
+                    <td><a href="/article/{$article.id}" target="_blank">{$article.title}</a></td>
+                    <td>{$article.category.name|default='-'}</td>
+                    <td>{$article.author.nickname|default='管理员'}</td>
+                    <td>
+                        {if intval($article.status) == 1}
+                        <span class="badge badge-success">已发布</span>
+                        {else/}
+                        <span class="badge badge-warning">草稿</span>
+                        {/if}
+                    </td>
+                    <td>{$article.publish_time|default='-'}</td>
+                    <td>
+                        <a href="/admin/article/edit?id={$article.id}" class="btn btn-primary btn-sm">编辑</a>
+                        <a href="javascript:;" onclick="deleteArticle({$article.id})" class="btn btn-danger btn-sm">删除</a>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+function deleteArticle(id) {
+    if (confirm('确定要删除这篇文章吗？')) {
+        $.post('/admin/article/delete', {id: id}, function(res) {
+            if (res.code === 1) {
+                alert('删除成功');
+                location.reload();
+            } else {
+                alert(res.msg || '删除失败');
+            }
+        });
+    }
+}
+</script>
+{/block}

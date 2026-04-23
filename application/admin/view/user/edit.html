@@ -1,0 +1,82 @@
+{assign name="currentMenu" value="user" /}
+{extend name="public/base" /}
+
+{block name="content"}
+<div class="admin-panel">
+    <div class="panel-header">
+        <h3><i class="fas fa-edit"></i> 编辑用户</h3>
+    </div>
+    <div class="panel-body">
+        <form id="userForm" style="max-width: 500px;">
+            <input type="hidden" name="id" value="{$user.id}">
+
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" class="form-control" value="{$user.username}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>新密码</label>
+                <input type="password" name="password" class="form-control" placeholder="留空则不修改密码">
+            </div>
+
+            <div class="form-group">
+                <label>昵称</label>
+                <input type="text" name="nickname" class="form-control" value="{$user.nickname|default=''}">
+            </div>
+
+            <div class="form-group">
+                <label>邮箱</label>
+                <input type="email" name="email" class="form-control" value="{$user.email|default=''}">
+            </div>
+
+            <div class="form-group">
+                <label>手机号</label>
+                <input type="tel" name="phone" class="form-control" value="{$user.phone|default=''}">
+            </div>
+
+            <div class="form-group">
+                <label>用户类型</label>
+                <select name="is_admin" class="form-control">
+                    <option value="0" {if intval($user.is_admin) == 0}selected{/if}>普通用户</option>
+                    <option value="1" {if intval($user.is_admin) == 1}selected{/if}>管理员</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>状态</label>
+                <select name="status" class="form-control">
+                    <option value="1" {if intval($user.status) == 1}selected{/if}>正常</option>
+                    <option value="0" {if intval($user.status) == 0}selected{/if}>禁用</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> 保存</button>
+                <a href="/admin/user/index" class="btn btn-default">取消</a>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$('#userForm').submit(function(e) {
+    e.preventDefault();
+    $.ajax({
+        url: '/admin/user/edit',
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(res) {
+            if (res.code === 1) {
+                alert('更新成功');
+                location.href = '/admin/user';
+            } else {
+                alert(res.msg || '更新失败');
+            }
+        }
+    });
+});
+</script>
+{/block}

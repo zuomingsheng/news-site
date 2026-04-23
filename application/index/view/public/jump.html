@@ -1,0 +1,157 @@
+{__NOLAYOUT__}<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $code == 1 ? '操作成功' : '操作失败'; ?> - {$siteName|default='综合新闻网站'}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { padding: 0; margin: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .jump-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 60px rgba(0,0,0,0.08);
+            padding: 50px 60px;
+            text-align: center;
+            max-width: 460px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+        }
+        .jump-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            <?php if ($code == 1): ?>
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            <?php else: ?>
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            <?php endif; ?>
+        }
+        .jump-icon-wrap {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            <?php if ($code == 1): ?>
+            background: linear-gradient(135deg, #d4f8e8, #a8e6cf);
+            box-shadow: 0 6px 24px rgba(46, 204, 113, 0.3);
+            color: #27ae60;
+            <?php else: ?>
+            background: linear-gradient(135deg, #fce4e4, #f5c6c6);
+            box-shadow: 0 6px 24px rgba(231, 76, 60, 0.3);
+            color: #c0392b;
+            <?php endif; ?>
+        }
+        .jump-icon-wrap i {
+            font-size: 42px;
+        }
+        .jump-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a2a3a;
+            margin-bottom: 10px;
+        }
+        .jump-msg {
+            font-size: 15px;
+            color: #5a6a7a;
+            margin-bottom: 30px;
+            line-height: 1.7;
+            word-break: break-all;
+        }
+        .jump-progress {
+            width: 100%;
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .jump-progress-bar {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #1a3a5c, #4a6fa5);
+            width: 100%;
+            animation: progressShrink <?php echo $wait; ?>s linear forwards;
+        }
+        @keyframes progressShrink {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        .jump-info {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 28px;
+        }
+        .jump-info span {
+            color: #1a3a5c;
+            font-weight: 600;
+        }
+        .jump-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 36px;
+            background: #1a3a5c;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(26, 58, 92, 0.25);
+        }
+        .jump-btn:hover {
+            background: #2c5282;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 58, 92, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="jump-card">
+        <div class="jump-icon-wrap">
+            <i class="fas <?php echo $code == 1 ? 'fa-check' : 'fa-times'; ?>"></i>
+        </div>
+        <div class="jump-title"><?php echo $code == 1 ? '操作成功' : '操作失败'; ?></div>
+        <div class="jump-msg"><?php echo strip_tags($msg); ?></div>
+        <div class="jump-progress">
+            <div class="jump-progress-bar"></div>
+        </div>
+        <div class="jump-info">
+            页面将在 <span id="wait"><?php echo $wait; ?></span> 秒后自动跳转
+        </div>
+        <a href="<?php echo $url; ?>" class="jump-btn" id="href">
+            <i class="fas fa-arrow-right"></i> 立即跳转
+        </a>
+    </div>
+    <script>
+        (function(){
+            var wait = document.getElementById('wait');
+            var href = document.getElementById('href').href;
+            var timer = setInterval(function(){
+                var t = --wait.innerHTML;
+                if (t <= 0) {
+                    location.href = href;
+                    clearInterval(timer);
+                }
+            }, 1000);
+        })();
+    </script>
+</body>
+</html>

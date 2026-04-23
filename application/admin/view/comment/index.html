@@ -1,0 +1,97 @@
+{assign name="currentMenu" value="comment" /}
+{extend name="public/base" /}
+
+{block name="content"}
+<div class="admin-panel">
+    <div class="panel-header">
+        <h3><i class="fas fa-comments"></i> 评论管理</h3>
+    </div>
+    <div class="panel-body">
+        <!-- 搜索表单 -->
+        <form action="" method="get" class="search-form">
+            <input type="text" name="keyword" placeholder="搜索评论内容..." value="{$keyword|default=''}">
+            <select name="status" class="form-control">
+                <option value="">全部</option>
+                <option value="1" {if $status == '1'}selected{/if}>显示</option>
+                <option value="0" {if $status == '0'}selected{/if}>隐藏</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> 搜索</button>
+        </form>
+
+        <!-- 评论列表 -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="60">ID</th>
+                    <th>评论内容</th>
+                    <th width="100">文章</th>
+                    <th width="80">用户</th>
+                    <th width="80">状态</th>
+                    <th width="160">评论时间</th>
+                    <th width="160">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="list" id="comment"}
+                <tr>
+                    <td>{$comment.id}</td>
+                    <td>
+                        <div style="max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            {$comment.content}
+                        </div>
+                        {if intval($comment.parent_id) != 0}
+                        <span class="badge badge-info">回复</span>
+                        {/if}
+                    </td>
+                    <td><a href="/article/{$comment.article_id}" target="_blank">查看文章</a></td>
+                    <td>{$comment.user.nickname|default='游客'}</td>
+                    <td>
+                        {if intval($comment.status) == 1}
+                        <span class="badge badge-success">显示</span>
+                        {else/}
+                        <span class="badge badge-danger">隐藏</span>
+                        {/if}
+                    </td>
+                    <td>{$comment.create_time|default='-'}</td>
+                    <td>
+                        <a href="javascript:;" onclick="toggleStatus({$comment.id}, {$comment.status})" class="btn btn-warning btn-sm">{$comment.status == 1 ? '隐藏' : '显示'}</a>
+                        <a href="javascript:;" onclick="deleteComment({$comment.id})" class="btn btn-danger btn-sm">删除</a>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+
+        <!-- 分页 -->
+        {$list->render()}
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+function toggleStatus(id, currentStatus) {
+    var newStatus = currentStatus == 1 ? 0 : 1;
+    $.post('/admin/comment/setStatus', {id: id, status: newStatus}, function(res) {
+        if (res.code === 1) {
+            location.reload();
+        } else {
+            alert(res.msg || '操作失败');
+        }
+    });
+}
+
+function deleteComment(id) {
+    if (confirm('确定要删除这条评论吗？')) {
+        $.post('/admin/comment/delete', {id: id}, function(res) {
+            if (res.code === 1) {
+                alert('删除成功');
+                location.reload();
+            } else {
+                alert(res.msg || '删除失败');
+            }
+        });
+    }
+}
+</script>
+{/block}

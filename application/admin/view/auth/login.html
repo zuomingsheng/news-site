@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台登录 - {$siteName|default='综合新闻网站'}</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body class="admin-login-wrapper">
+    <div class="admin-login-card">
+        <div class="admin-login-header">
+            <h2>后台管理登录</h2>
+            <p>{$siteName|default='综合新闻网站'}</p>
+        </div>
+        <form action="/admin/login" method="post" class="admin-login-body" id="loginForm">
+            <div class="form-group">
+                <input type="text" name="username" class="form-control" placeholder="请输入管理员账号" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" class="form-control" placeholder="请输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary">登 录</button>
+        </form>
+    </div>
+</body>
+</html>

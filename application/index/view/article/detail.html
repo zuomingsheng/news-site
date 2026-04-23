@@ -1,0 +1,198 @@
+{extend name="public/base" /}
+
+{block name="content"}
+<!-- 面包屑导航 -->
+<nav class="breadcrumb">
+    <div class="container">
+        <a href="/">首页</a>
+        <span>/</span>
+        <a href="/category/{$article.category_id}">{$article.category.name|default='文章'}</a>
+        <span>/</span>
+        <span>正文</span>
+    </div>
+</nav>
+
+<!-- 文章详情 -->
+<div class="article-detail-wrapper">
+    <!-- 文章主体 -->
+    <article class="article-main">
+        <!-- 文章头部 -->
+        <header class="article-header">
+            <a href="/category/{$article.category_id}" class="article-category">{$article.category.name|default='默认分类'}</a>
+            <h1 class="article-title">{$article.title}</h1>
+            <div class="article-meta">
+                <span><i class="far fa-user"></i> {$article.author.nickname|default='管理员'}</span>
+                <span><i class="far fa-clock"></i> {$article.publish_time|default=''}</span>
+                <span><i class="far fa-eye"></i> {$article.views} 阅读</span>
+                <span><i class="far fa-comment"></i> {$article.comments} 评论</span>
+                <div class="article-actions">
+                    <a class="article-action" data-action="like" data-id="{$article.id}">
+                        <i class="far fa-thumbs-up"></i>
+                        <span class="like-count">{$article.likes}</span> 点赞
+                    </a>
+                    <a class="article-action" href="javascript:;" onclick="window.print()">
+                        <i class="far fa-print"></i> 打印
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- 文章封面 -->
+        {notempty name="article.cover"}
+        <img class="article-cover" src="{$article.cover}" alt="{$article.title}">
+        {/notempty}
+
+        <!-- 文章正文 -->
+        <div class="article-content">
+            {$article.content}
+        </div>
+
+        <!-- 文章标签 -->
+        <div class="article-tags">
+            <span class="article-tags-label"><i class="fas fa-tags"></i> 标签：</span>
+            <a href="/search?keyword={$article.category.name|default='新闻'}" class="article-tag">{$article.category.name|default='新闻'}</a>
+            <a href="/search?keyword=热门" class="article-tag">热门</a>
+        </div>
+
+        <!-- 上下篇 -->
+        <div class="article-nav">
+            <div class="article-nav-item">
+                {notempty name="prev"}
+                <div class="article-nav-label"><i class="fas fa-arrow-left"></i> 上一篇</div>
+                <div class="article-nav-title"><a href="/article/{$prev.id}">{$prev.title}</a></div>
+                {else /}
+                <div class="article-nav-label">没有了</div>
+                {/notempty}
+            </div>
+            <div class="article-nav-item next">
+                {notempty name="next"}
+                <div class="article-nav-label">下一篇 <i class="fas fa-arrow-right"></i></div>
+                <div class="article-nav-title"><a href="/article/{$next.id}">{$next.title}</a></div>
+                {else /}
+                <div class="article-nav-label没有了"></div>
+                {/notempty}
+            </div>
+        </div>
+
+        <!-- 相关文章 -->
+        {notempty name="related"}
+        <div class="related-articles">
+            <h3><i class="fas fa-link"></i> 相关推荐</h3>
+            <div class="related-article-list">
+                {volist name="related" id="item"}
+                <div class="related-article-item">
+                    <a href="/article/{$item.id}">
+                        <img class="related-article-thumb" src="{$item.cover}" alt="{$item.title}" onerror="this.src='/static/images/default-cover.jpg'">
+                    </a>
+                    <div class="related-article-text">
+                        <h4 class="related-article-title">
+                            <a href="/article/{$item.id}">{$item.title}</a>
+                        </h4>
+                        <span class="related-article-meta">{$item.publish_time|default='-'}</span>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+        </div>
+        {/notempty}
+    </article>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+        <!-- 热门文章 -->
+        <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title"><i class="fas fa-fire"></i> 热门文章</h3>
+            <div class="sidebar-widget-body">
+                <ul class="hot-article-list">
+                    {volist name="hotArticles" id="item" key="k"}
+                    <li>
+                        <span class="rank {if condition='$k<=3'}top{/if}">{$k}</span>
+                        <h4 class="article-title">
+                            <a href="/article/{$item.id}">{$item.title}</a>
+                        </h4>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- 评论区 -->
+<section class="comments-section">
+    <div class="comments-header">
+        <i class="far fa-comments"></i> 评论区
+        <span class="count">（{$commentCount|default=0} 条评论）</span>
+    </div>
+
+    <!-- 评论表单 -->
+    <div class="comment-form">
+        <input type="hidden" id="articleId" value="{$article.id}">
+        {present name="Think.session.user_id"}
+        <textarea id="commentContent" placeholder="写下你的评论..."></textarea>
+        <div class="comment-form-actions">
+            <span class="comment-tips">文明上网，理性发言</span>
+            <button type="submit" id="commentSubmit" class="comment-submit">发表评论</button>
+        </div>
+        {else /}
+        <div class="login-tips">
+            <a href="/user/login">登录</a> 后可发表评论
+        </div>
+        {/present}
+    </div>
+
+    <!-- 评论列表 -->
+    <div class="comment-list">
+        {empty name="comments"}
+        <div class="empty-comments">
+            <p>暂无评论，来抢沙发吧！</p>
+        </div>
+        {else /}
+        {volist name="comments" id="comment"}
+        <div class="comment-item">
+            <img class="comment-avatar" src="{$comment.user.avatar|default='/static/images/default-avatar.png'}" alt="avatar">
+            <div class="comment-body">
+                <div class="comment-header">
+                    <span class="comment-author">{$comment.user.nickname|default='匿名用户'}</span>
+                    <span class="comment-time">{$comment.create_time}</span>
+                </div>
+                <div class="comment-content">{$comment.content}</div>
+                <div class="comment-actions">
+                    <span class="comment-reply-btn" data-id="{$comment.id}">
+                        <i class="far fa-comment"></i> 回复
+                    </span>
+                </div>
+
+                <!-- 回复表单 -->
+                <div id="replyForm{$comment.id}" class="comment-reply-form" style="display:none;">
+                    <textarea id="replyContent{$comment.id}" placeholder="写下你的回复..."></textarea>
+                    <div class="comment-reply-form-actions">
+                        <button type="button" class="btn-reply-cancel" onclick="document.getElementById('replyForm{$comment.id}').style.display='none'">取消</button>
+                        <button type="button" class="btn-reply-submit" onclick="Comment.submitReply({$comment.id})">回复</button>
+                    </div>
+                </div>
+
+                <!-- 子评论 -->
+                {notempty name="comment.children"}
+                <div class="comment-reply">
+                    {volist name="comment.children" id="reply"}
+                    <div class="comment-item">
+                        <img class="comment-avatar" src="{$reply.user.avatar|default='/static/images/default-avatar.png'}" alt="avatar" style="width:32px;height:32px;">
+                        <div class="comment-body">
+                            <div class="comment-header">
+                                <span class="comment-author">{$reply.user.nickname|default='匿名用户'}</span>
+                                <span class="comment-time">{$reply.create_time}</span>
+                            </div>
+                            <div class="comment-content">{$reply.content}</div>
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+                {/notempty}
+            </div>
+        </div>
+        {/volist}
+        {/empty}
+    </div>
+</section>
+{/block}
