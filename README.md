@@ -1,132 +1,158 @@
-ThinkPHP 5.0
-===============
+# 综合新闻门户网站
 
-[![Total Downloads](https://poser.pugx.org/topthink/think/downloads)](https://packagist.org/packages/topthink/think)
-[![Latest Stable Version](https://poser.pugx.org/topthink/think/v/stable)](https://packagist.org/packages/topthink/think)
-[![Latest Unstable Version](https://poser.pugx.org/topthink/think/v/unstable)](https://packagist.org/packages/topthink/think)
-[![License](https://poser.pugx.org/topthink/think/license)](https://packagist.org/packages/topthink/think)
+基于 **ThinkPHP 5.0** 开发的综合新闻门户网站，包含前台新闻展示和后台内容管理系统（CMS）。
 
-ThinkPHP5在保持快速开发和大道至简的核心理念不变的同时，PHP版本要求提升到5.4，对已有的CBD模式做了更深的强化，优化核心，减少依赖，基于全新的架构思想和命名空间实现，是ThinkPHP突破原有框架思路的颠覆之作，其主要特性包括：
+---
 
- + 基于命名空间和众多PHP新特性
- + 核心功能组件化
- + 强化路由功能
- + 更灵活的控制器
- + 重构的模型和数据库类
- + 配置文件可分离
- + 重写的自动验证和完成
- + 简化扩展机制
- + API支持完善
- + 改进的Log类
- + 命令行访问支持
- + REST支持
- + 引导文件支持
- + 方便的自动生成定义
- + 真正惰性加载
- + 分布式环境支持
- + 更多的社交类库
+## 功能特性
 
-> ThinkPHP5的运行环境要求PHP5.4以上。
+### 前台模块
 
-详细开发文档参考 [ThinkPHP5完全开发手册](http://www.kancloud.cn/manual/thinkphp5)
+- **首页**：轮播焦点图、热点新闻、分类导航
+- **文章详情**：富文本内容、浏览量统计、上一篇/下一篇、相关文章推荐
+- **文章列表**：分类筛选、分页展示、置顶/推荐标识
+- **搜索**：标题/内容关键字全文检索
+- **评论互动**：文章评论、嵌套回复
+- **用户系统**：注册、登录、个人中心
 
-## 目录结构
+### 后台模块
 
-初始的目录结构如下：
+- **仪表盘**：数据统计概览
+- **文章管理**：发布、编辑、上下架、富文本编辑
+- **分类管理**：多级分类体系、排序调整
+- **用户管理**：用户列表、状态管理
+- **评论管理**：评论审核、回复、删除
+- **轮播管理**：首页焦点图配置
+- **系统设置**：站点配置、SEO 设置
 
-~~~
-www  WEB部署目录（或者子目录）
-├─application           应用目录
-│  ├─common             公共模块目录（可以更改）
-│  ├─module_name        模块目录
-│  │  ├─config.php      模块配置文件
-│  │  ├─common.php      模块函数文件
-│  │  ├─controller      控制器目录
-│  │  ├─model           模型目录
-│  │  ├─view            视图目录
-│  │  └─ ...            更多类库目录
-│  │
-│  ├─command.php        命令行工具配置文件
-│  ├─common.php         公共函数文件
-│  ├─config.php         公共配置文件
-│  ├─route.php          路由配置文件
-│  ├─tags.php           应用行为扩展定义文件
-│  └─database.php       数据库配置文件
-│
-├─public                WEB目录（对外访问目录）
-│  ├─index.php          入口文件
-│  ├─router.php         快速测试文件
-│  └─.htaccess          用于apache的重写
-│
-├─thinkphp              框架系统目录
-│  ├─lang               语言文件目录
-│  ├─library            框架类库目录
-│  │  ├─think           Think类库包目录
-│  │  └─traits          系统Trait目录
-│  │
-│  ├─tpl                系统模板目录
-│  ├─base.php           基础定义文件
-│  ├─console.php        控制台入口文件
-│  ├─convention.php     框架惯例配置文件
-│  ├─helper.php         助手函数文件
-│  ├─phpunit.xml        phpunit配置文件
-│  └─start.php          框架入口文件
-│
-├─extend                扩展类库目录
-├─runtime               应用的运行时目录（可写，可定制）
-├─vendor                第三方类库目录（Composer依赖库）
-├─build.php             自动生成定义文件（参考）
-├─composer.json         composer 定义文件
-├─LICENSE.txt           授权说明文件
-├─README.md             README 文件
-├─think                 命令行入口文件
-~~~
+---
 
-> router.php用于php自带webserver支持，可用于快速测试
-> 切换到public目录后，启动命令：php -S localhost:8888  router.php
-> 上面的目录结构和名称是可以改变的，这取决于你的入口文件和配置参数。
+## 技术栈
 
-## 命名规范
+| 层级 | 技术 |
+|------|------|
+| 后端框架 | ThinkPHP 5.0 |
+| 数据库 | MySQL 5.7+ |
+| 前端 | jQuery 3.x + Bootstrap 5 |
+| 模板引擎 | ThinkPHP 内置 |
+| 认证方式 | Session |
 
-`ThinkPHP5`遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如下规范：
+---
 
-### 目录和文件
+## 环境要求
 
-*   目录不强制规范，驼峰和小写+下划线模式均支持；
-*   类库、函数文件统一以`.php`为后缀；
-*   类的文件名均以命名空间定义，并且命名空间的路径和类库文件所在路径一致；
-*   类名和类文件名保持一致，统一采用驼峰法命名（首字母大写）；
+- PHP >= 5.4
+- MySQL >= 5.7
+- Apache / Nginx
+- PDO PHP 扩展
+- OpenSSL PHP 扩展
 
-### 函数和类、属性命名
-*   类的命名采用驼峰法，并且首字母大写，例如 `User`、`UserType`，默认不需要添加后缀，例如`UserController`应该直接命名为`User`；
-*   函数的命名使用小写字母和下划线（小写字母开头）的方式，例如 `get_client_ip`；
-*   方法的命名使用驼峰法，并且首字母小写，例如 `getUserName`；
-*   属性的命名使用驼峰法，并且首字母小写，例如 `tableName`、`instance`；
-*   以双下划线“__”打头的函数或方法作为魔法方法，例如 `__call` 和 `__autoload`；
+---
 
-### 常量和配置
-*   常量以大写字母和下划线命名，例如 `APP_PATH`和 `THINK_PATH`；
-*   配置参数以小写字母和下划线命名，例如 `url_route_on` 和`url_convert`；
+## 快速开始
 
-### 数据表和字段
-*   数据表和字段采用小写加下划线方式命名，并注意字段名不要以下划线开头，例如 `think_user` 表和 `user_name`字段，不建议使用驼峰和中文作为数据表字段命名。
+### 1. 克隆项目
 
-### 路由方式
-*   路由方式已设置好，你不能修改nginx的配置以及route.php里的配置
+```bash
+git clone https://github.com/zuomingsheng/news-site.git
+cd news-site
+```
 
-## 参与开发
-请参阅 [ThinkPHP5 核心框架包](https://github.com/top-think/framework)。
+### 2. 安装依赖
 
-## 版权信息
+```bash
+composer install
+```
 
-ThinkPHP遵循Apache2开源协议发布，并提供免费使用。
+### 3. 配置数据库
 
-本项目包含的第三方源码和二进制文件之版权信息另行标注。
+```bash
+# 复制示例配置文件
+cp application/database.example.php application/database.php
 
-版权所有Copyright © 2006-2018 by ThinkPHP (http://thinkphp.cn)
+# 编辑 database.php，填入你的数据库信息
+```
 
-All rights reserved。
+### 4. 导入数据库
 
-ThinkPHP® 商标和著作权所有者为上海顶想信息科技有限公司。
+```bash
+mysql -u root -p < news_site.sql
+```
 
-更多细节参阅 [LICENSE.txt](LICENSE.txt)
+### 5. 启动服务
+
+```bash
+# PHP 内置服务器
+cd public && php -S localhost:8888
+
+# 或 ThinkPHP CLI
+php think run
+```
+
+### 6. 访问项目
+
+- 前台首页：http://localhost:8888
+- 后台登录：http://localhost:8888/admin/login
+
+---
+
+## 项目结构
+
+```
+.
+├── application/           # 应用目录
+│   ├── common/            # 公共模块（模型）
+│   │   └── model/         # Article, Category, User, Comment, Banner, Config
+│   ├── index/             # 前台模块
+│   │   ├── controller/    # Index, Article, User, Comment, Search
+│   │   └── view/          # 前台模板
+│   ├── admin/             # 后台模块
+│   │   ├── controller/    # Auth, Index, Article, Category, User, Comment, Banner, System
+│   │   ├── view/          # 后台模板
+│   │   └── paginator/     # 自定义分页器
+│   ├── database.php       # 数据库配置（需手动创建）
+│   └── route.php          # 路由规则
+├── public/                # Web 根目录
+│   ├── static/            # CSS / JS / 图片
+│   └── uploads/           # 上传文件
+├── thinkphp/              # ThinkPHP 框架核心
+├── news_site.sql          # 数据库结构
+├── composer.json
+└── README.md
+```
+
+---
+
+## 核心路由
+
+| URL | 说明 |
+|-----|------|
+| `/` | 前台首页 |
+| `article/:id` | 文章详情 |
+| `category/:cid` | 分类列表 |
+| `article` | 文章列表 |
+| `search` | 搜索 |
+| `admin/login` | 后台登录 |
+
+---
+
+## 数据库配置说明
+
+项目中的 `application/database.php` 已被加入 `.gitignore`，不会提交到版本控制。
+
+首次使用时，请复制 `application/database.example.php` 为 `application/database.php`，并修改其中的数据库连接信息。
+
+---
+
+## 开发规范
+
+- 遵循 ThinkPHP 5 编码规范
+- 模型统一放在 `application/common/model/`
+- 所有后台控制器继承 `Base` 基类进行权限校验
+- 上传文件统一存放到 `/public/uploads/`
+
+---
+
+## License
+
+[Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0)
